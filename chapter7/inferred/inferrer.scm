@@ -5,9 +5,10 @@
   (require "data-structures.scm")
   (require "unifier.scm")
   (require "substitutions.scm")
+  (require "gen-equations.scm")
   
 
-  (provide type-of-program type-of)
+  (provide type-of-program type-of type-of-ex7.27)
 
   ;;;;;;;;;;;;;;;; The Type Checker ;;;;;;;;;;;;;;;;
 
@@ -32,7 +33,8 @@
           (cases answer 
                  (begin 
                    (initialize-subst!-ex7.21)
-                   (type-of exp1 (init-tenv) (empty-subst)))
+                   (type-of-ex7.27 exp1)
+                   (an-answer (type-of-ex7.27 exp1) (get-subst-ex7.21)))
             (an-answer (ty subst)
               (eopl:printf "*type-of-program*\n  exp1: ~s\n  type: ~s\n  subst: ~s\n\n" exp1 ty subst)
               (apply-subst-to-type ty subst)))))))
@@ -145,6 +147,16 @@
         
         )))
 
+  ;; Exercise 7.27 [**]
+
+  (define type-of-ex7.27
+    (lambda (exp)
+      (initialize-equations!)
+      (initialize-subst!-ex7.21)
+      (let ((target-type (gen-equations exp)))
+        (let ((subst (unifier-ex7.27 (get-equations) (empty-subst))))
+          (apply-subst-to-type target-type subst)))))
+ 
     ;;;;;;;;;;;;;;;; type environments ;;;;;;;;;;;;;;;;
     
   ;; why are these separated?
